@@ -1,0 +1,20 @@
+<form [formGroup]="addForm" (ngSubmit)="addPlayer()" class="add-player-form">
+  <div class="form-container">
+    <div class="form-column" *ngFor="let field of formFields">
+      <div class="form-group">
+        <label [for]="field">{{ fieldLabels[field] }}</label>
+        <input [id]="field" [formControlName]="field" class="form-control" />
+        <small
+          *ngIf="addForm.get(field)?.invalid && addForm.get(field)?.touched"
+          class="text-danger"
+        >
+          {{ fieldLabels[field] }} is required.
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="addForm.invalid" class="btn btn-primary">
+    Add Player
+  </button>
+</form>

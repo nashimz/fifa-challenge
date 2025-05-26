@@ -1,0 +1,25 @@
+<button
+  type="button"
+  class="btn btn-dark"
+  [routerLink]="player?.id ? ['/player/update', player.id] : null"
+>
+  MODIFY PLAYER <i class="material-icons">edit</i>
+</button>
+
+<div class="wrapper">
+  <div class="card" *ngIf="player">
+    <img src="{{ player.player_face_url }}" class="card-img-top" alt="..." />
+    <div class="card-body">
+      <h5 class="card-title">{{ player.long_name }}</h5>
+      <div class="attributes">
+        <span>{{ player.nationality_name }}</span>
+        <span>{{ player.club_name }}</span>
+        <span>Positions: {{ player.player_positions }}</span>
+        <span>Overall: {{ player.overall }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="chart">
+    <app-radar-chart [attributes]="playerAttributes"></app-radar-chart>
+  </div>
+</div>
