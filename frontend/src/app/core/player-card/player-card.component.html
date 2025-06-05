@@ -1,0 +1,18 @@
+<div class="card mb-3" *ngFor="let item of Players">
+  <a [routerLink]="['/player', item.id]" class="text-decoration-none">
+    <div class="row no-gutters">
+      <div class="col-md-4">
+        <img src="{{ item.player_face_url }}" class="card-img" alt="..." />
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <span class="card-title">{{ item.long_name }}</span>
+
+          <span class="little">{{ item.nationality_name }}</span>
+
+          <span class="little">{{ item.club_name }}</span>
+        </div>
+      </div>
+    </div>
+  </a>
+</div>

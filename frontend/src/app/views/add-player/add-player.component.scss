@@ -1,0 +1,82 @@
+.add-player-form {
+  max-width: 800px; /* Increased form width */
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 50px;
+}
+
+.add-player-form .form-group {
+  margin-bottom: 15px;
+  width: 48%; /* Adjust width of each form group */
+}
+
+.add-player-form label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.add-player-form input.form-control {
+  width: 100%;
+  padding: 8px; /* Smaller padding */
+  font-size: 13px; /* Smaller font size */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  height: 30px;
+}
+
+.add-player-form input.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.add-player-form small.text-danger {
+  color: #e74c3c;
+  font-size: 12px;
+}
+
+.add-player-form button.btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-player-form button.btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.add-player-form button.btn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+/* Adjust form layout to be wider than tall */
+.form-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.form-column {
+  flex: 1;
+  min-width: 350px; /* Ensures columns take up available space */
+}
+
+.form-column .form-group {
+  width: 100%; /* Ensures full width for each input in smaller containers */
+}

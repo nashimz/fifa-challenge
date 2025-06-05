@@ -1,0 +1,60 @@
+section {
+  display: flex;
+  flex-direction: column;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.filters input {
+  border-radius: 10px;
+  border: none;
+  text-align: center;
+  margin-left: 2px;
+  background-color: rgba(44, 44, 44, 0.9);
+}
+
+.filters {
+  margin-top: 5px;
+}
+
+button {
+  border-radius: 10px;
+  border: none;
+  text-align: center;
+  background-color: #ff4d00;
+  margin: 5px;
+  color: white;
+
+  i {
+    font-size: 25px;
+    float: right;
+  }
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+textarea:focus,
+input:focus {
+  color: white;
+}
+
+span {
+  color: #ff4d00;
+  font-weight: 600;
+}
+
+.not-logged-in-message {
+  text-align: center;
+  margin-top: 100px;
+  font-size: 1.5rem;
+  color: #c7c7c7;
+}

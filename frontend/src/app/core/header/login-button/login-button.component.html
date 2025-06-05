@@ -1,0 +1,11 @@
+<!-- Show login button only if not authenticated -->
+<button *ngIf="(isAuthenticated$ | async) === false" (click)="login()">
+  Login
+</button>
+
+<!-- Show user name if authenticated -->
+<span *ngIf="isAuthenticated$ | async as isAuth">
+  <span *ngIf="isAuth" class="user-greeting">
+    Hello, {{ (user$ | async)?.name }}!
+  </span>
+</span>
