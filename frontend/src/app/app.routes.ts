@@ -6,6 +6,7 @@ import { UpdatePlayerComponent } from './views/update-player/update-player.compo
 import { AddPlayerComponent } from './views/add-player/add-player.component';
 import { BrowserAuthGuard } from './core/guards/browser-auth.guard';
 import { NotAuthorizedComponent } from './views/not-authorized/not-authorized.component';
+import { DashboardComponent } from './views/dashboard/dashboard.component';
 
 export const routes: Routes = [
   {
@@ -36,6 +37,11 @@ export const routes: Routes = [
     path: 'add-player',
     component: AddPlayerComponent,
     canActivate: [BrowserAuthGuard], // protect add player route
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [BrowserAuthGuard],
   },
   { path: 'not-authorized', component: NotAuthorizedComponent },
 ];

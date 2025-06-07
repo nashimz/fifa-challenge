@@ -1,0 +1,9 @@
+<div *ngIf="auth.user$ | async as user; else loggedOut" class="card">
+  <img [src]="user.picture" alt="User picture" />
+  <span>{{ user.name }}</span>
+  <p>{{ user.email }}</p>
+</div>
+
+<ng-template #loggedOut>
+  <p>Please log in to see your dashboard.</p>
+</ng-template>

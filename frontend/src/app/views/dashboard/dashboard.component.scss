@@ -1,0 +1,26 @@
+.card {
+  width: 320px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  text-align: center; /* centers inline elements like img and text horizontally */
+  margin: 1rem auto;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centers children horizontally */
+  background-color: #ff4d00;
+  border: rgb(255, 255, 255, 0.5) solid 2px !important;
+  font-family: "Chakra Petch", Helvetica, Arial, Lucida, sans-serif;
+  font-weight: 600;
+  color: white;
+}
+
+img {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+  object-fit: cover; /* make sure the image covers the circle nicely */
+  border: rgba(0, 0, 0, 0.5) solid 2px !important;
+}

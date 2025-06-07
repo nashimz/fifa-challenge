@@ -5,18 +5,12 @@ import { MenuItem } from '../../model/menu-items';
 import { AuthService } from '@auth0/auth0-angular';
 import { LoginButtonComponent } from '../login-button/login-button.component';
 import { LogoutButtonComponent } from '../logout-button/logout-button.component';
+import { AuthButtonComponent } from '../../auth-button/auth-button.component';
 
 @Component({
   selector: 'app-header-menu',
   standalone: true,
-  imports: [
-    CommonModule,
-    NgFor,
-    NgIf,
-    RouterLink,
-    LoginButtonComponent,
-    LogoutButtonComponent,
-  ],
+  imports: [CommonModule, NgFor, NgIf, RouterLink, AuthButtonComponent],
   templateUrl: './header-menu.component.html',
   styleUrls: ['./header-menu.component.scss'],
 })

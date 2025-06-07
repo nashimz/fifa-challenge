@@ -17,7 +17,7 @@ export const getPlayers = async (req: Request, res: Response) => {
     console.log("Filters applied:", where); // Debug: check the filters
 
     // Else, apply pagination for regular API response
-    const limit = 25; // Default limit to 15
+    const limit = 25; // Default limit to 25
     const pageParam = Array.isArray(req.query.page)
       ? req.query.page[0]
       : req.query.page;
@@ -216,8 +216,4 @@ export const updatePlayer = async (
       msg: "An error occurred while updating the player",
     });
   }
-};
-
-export const login = async (req: Request, res: Response) => {
-  const { usuario, password } = req.body;
 };
