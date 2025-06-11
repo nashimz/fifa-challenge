@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.updatePlayer = exports.postPlayer = exports.deletePlayer = exports.getPlayer = exports.exportPlayersCSV = exports.getPlayers = void 0;
+exports.getPlayerSkillTimeline = exports.updatePlayer = exports.postPlayer = exports.deletePlayer = exports.getPlayer = exports.exportPlayersCSV = exports.getPlayers = void 0;
 const players_1 = require("../models/players");
 const sequelize_1 = require("sequelize");
 const json2csv_1 = require("json2csv"); //
@@ -28,7 +28,7 @@ const getPlayers = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             where.player_positions = { [sequelize_1.Op.like]: `%${position}%` }; // Filter by position (partial match)
         console.log("Filters applied:", where); // Debug: check the filters
         // Else, apply pagination for regular API response
-        const limit = 25; // Default limit to 15
+        const limit = 25; // Default limit to 25
         const pageParam = Array.isArray(req.query.page)
             ? req.query.page[0]
             : req.query.page;
@@ -189,7 +189,72 @@ const updatePlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.updatePlayer = updatePlayer;
-const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { usuario, password } = req.body;
+const getPlayerSkillTimeline = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const skillParam = req.query.skill;
+    const allowedSkills = [
+        "pace",
+        "shooting",
+        "passing",
+        "dribbling",
+        "defending",
+        "physic",
+        "overall",
+    ];
+    if (!skillParam) {
+        res.status(400).json({ message: "Skill query parameter is required." });
+        return;
+    }
+    // Split skills by comma, trim whitespace, filter out empties
+    const requestedSkills = skillParam
+        .split(",")
+        .map((s) => s.trim().toLowerCase())
+        .filter((s) => s.length > 0);
+    // Validate requested skills
+    const invalidSkills = requestedSkills.filter((s) => !allowedSkills.includes(s));
+    if (invalidSkills.length > 0) {
+        res
+            .status(400)
+            .json({
+            message: `Invalid skill(s) selected: ${invalidSkills.join(", ")}`,
+        });
+        return;
+    }
+    try {
+        const playerRecord = yield players_1.players.findByPk(id);
+        if (!playerRecord) {
+            res.status(404).json({ message: "Player not found" });
+            return;
+        }
+        // Query all records with the player's long_name
+        const playerTimelineRecords = yield players_1.players.findAll({
+            where: {
+                long_name: playerRecord.long_name,
+            },
+            // Select fifa_version, fifa_update and all requested skills
+            attributes: ["fifa_version", "fifa_update", ...requestedSkills],
+            order: [
+                ["fifa_version", "ASC"],
+                ["fifa_update", "ASC"],
+            ],
+        });
+        // Build response object:
+        // { pace: [...], shooting: [...], passing: [...] }
+        const result = {};
+        requestedSkills.forEach((skill) => {
+            result[skill] = playerTimelineRecords.map((record) => ({
+                fifa_version: record.fifa_version,
+                fifa_update: record.fifa_update,
+                value: record.get(skill),
+            }));
+        });
+        res.status(200).json(result);
+    }
+    catch (error) {
+        console.error("Error fetching skill timeline:", error);
+        res.status(500).json({
+            message: "An error occurred while fetching skill timeline.",
+        });
+    }
 });
-exports.login = login;
+exports.getPlayerSkillTimeline = getPlayerSkillTimeline;

@@ -4,6 +4,7 @@ import {
   exportPlayersCSV,
   getPlayer,
   getPlayers,
+  getPlayerSkillTimeline,
   postPlayer,
   updatePlayer,
 } from "../controllers/player";
@@ -16,4 +17,6 @@ router.get("/:id", getPlayer);
 router.delete("/:id", deletePlayer);
 router.post("/", postPlayer);
 router.put("/:id", updatePlayer);
+router.get("/:id/timeline", getPlayerSkillTimeline);
+
 export default router;

@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { enviroment } from '../../../enviroments/enviroment';
 import { Observable } from 'rxjs';
+import { SkillTimelineEntry } from '../model/skill-timeline';
 
 @Injectable({
   providedIn: 'root',
@@ -54,5 +55,18 @@ export class PlayerService {
   }
   addPlayer(playerData: any): Observable<any> {
     return this.http.post(`${this.myAppUrl}${this.myApiUrl}`, playerData);
+  }
+
+  getPlayerSkillTimeline(
+    playerId: number,
+    skills: string[]
+  ): Observable<Record<string, { fifa_version: number; value: number }[]>> {
+    return this.http.get<
+      Record<string, { fifa_version: number; value: number }[]>
+    >(`${this.myAppUrl}${this.myApiUrl}${playerId}/timeline`, {
+      params: {
+        skill: skills.join(','), // join skills with comma to match backend query param
+      },
+    });
   }
 }

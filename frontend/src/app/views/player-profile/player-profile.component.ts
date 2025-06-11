@@ -4,37 +4,52 @@ import { PlayerService } from '../../core/services/player.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule, NgIf } from '@angular/common';
 import { RadarChartComponent } from '../../core/radar-chart/radar-chart.component';
+import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { NgChartsConfiguration } from 'ng2-charts';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { SkillTimelineChartComponent } from '../../core/skill-timeline-chart/skill-timeline-chart.component';
+
 @Component({
   selector: 'app-player-profile',
   standalone: true,
-  imports: [NgIf, CommonModule, RadarChartComponent, RouterLink],
+  imports: [
+    NgIf,
+    CommonModule,
+    RadarChartComponent,
+    RouterLink,
+    FormsModule,
+    SkillTimelineChartComponent,
+  ],
   templateUrl: './player-profile.component.html',
   styleUrl: './player-profile.component.scss',
 })
 export class PlayerProfileComponent implements OnInit {
   player: any;
   playerAttributes: { name: string; value: number }[] = [];
+
+  skillsTimeline: Record<string, { fifa_version: number; value: number }[]> =
+    {};
+  skillsToShow = ['pace', 'shooting', 'passing'];
+
   constructor(
     private route: ActivatedRoute,
+    private http: HttpClient,
     private _playerService: PlayerService
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this._playerService.getPlayerById(+id).subscribe(
-        (data) => {
-          this.player = data;
-          this.prepareAttributesForRadarChart(data);
-        },
-        (error) => {
-          console.error('Error fetching player data:', error);
-        }
-      );
+      this._playerService.getPlayerById(+id).subscribe((player) => {
+        this.player = player;
+        this.prepareAttributesForRadarChart(player);
+        this.loadSkillTimeline(+id, 'pace,passing,shooting');
+      });
     }
   }
 
-  private prepareAttributesForRadarChart(player: any): void {
+  prepareAttributesForRadarChart(player: any) {
     this.playerAttributes = [
       { name: 'Pace', value: player.pace },
       { name: 'Shooting', value: player.shooting },
@@ -43,5 +58,16 @@ export class PlayerProfileComponent implements OnInit {
       { name: 'Defending', value: player.defending },
       { name: 'Physical', value: player.physic },
     ];
+  }
+
+  loadSkillTimeline(playerId: number, skill: string) {
+    this._playerService.getPlayerSkillTimeline(playerId, [skill]).subscribe({
+      next: (timeline) => {
+        this.skillsTimeline = timeline;
+      },
+      error: (err) => {
+        console.error('Failed to load skill timeline:', err);
+      },
+    });
   }
 }

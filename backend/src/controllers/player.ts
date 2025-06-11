@@ -217,3 +217,84 @@ export const updatePlayer = async (
     });
   }
 };
+
+export const getPlayerSkillTimeline = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+  const skillParam = req.query.skill as string | undefined;
+
+  const allowedSkills = [
+    "pace",
+    "shooting",
+    "passing",
+    "dribbling",
+    "defending",
+    "physic",
+    "overall",
+  ];
+
+  if (!skillParam) {
+    res.status(400).json({ message: "Skill query parameter is required." });
+    return;
+  }
+
+  // Split skills by comma, trim whitespace, filter out empties
+  const requestedSkills = skillParam
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter((s) => s.length > 0);
+
+  // Validate requested skills
+  const invalidSkills = requestedSkills.filter(
+    (s) => !allowedSkills.includes(s)
+  );
+  if (invalidSkills.length > 0) {
+    res
+      .status(400)
+      .json({
+        message: `Invalid skill(s) selected: ${invalidSkills.join(", ")}`,
+      });
+    return;
+  }
+
+  try {
+    const playerRecord = await players.findByPk(id);
+    if (!playerRecord) {
+      res.status(404).json({ message: "Player not found" });
+      return;
+    }
+
+    // Query all records with the player's long_name
+    const playerTimelineRecords = await players.findAll({
+      where: {
+        long_name: playerRecord.long_name,
+      },
+      // Select fifa_version, fifa_update and all requested skills
+      attributes: ["fifa_version", "fifa_update", ...requestedSkills],
+      order: [
+        ["fifa_version", "ASC"],
+        ["fifa_update", "ASC"],
+      ],
+    });
+
+    // Build response object:
+    // { pace: [...], shooting: [...], passing: [...] }
+    const result: Record<string, any[]> = {};
+    requestedSkills.forEach((skill) => {
+      result[skill] = playerTimelineRecords.map((record) => ({
+        fifa_version: record.fifa_version,
+        fifa_update: record.fifa_update,
+        value: record.get(skill),
+      }));
+    });
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching skill timeline:", error);
+    res.status(500).json({
+      message: "An error occurred while fetching skill timeline.",
+    });
+  }
+};
