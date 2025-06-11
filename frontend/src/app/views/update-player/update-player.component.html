@@ -1,81 +1,22 @@
 <form [formGroup]="updateForm" (ngSubmit)="updatePlayer()">
-  <div>
-    <label for="long_name">Name</label>
-    <input id="long_name" formControlName="long_name" />
+  <div *ngFor="let field of inputFields">
+    <label [for]="field.name">{{ field.label }}</label>
+    <input
+      [id]="field.name"
+      [type]="field.type"
+      [formControlName]="field.name"
+    />
     <small
       *ngIf="
-        updateForm.get('long_name')?.invalid &&
-        updateForm.get('long_name')?.touched
+        updateForm.get(field.name)?.invalid &&
+        updateForm.get(field.name)?.touched
       "
     >
-      Name is required and must be at least 2 characters.
+      {{ field.label }} is required or invalid.
     </small>
   </div>
-
-  <div>
-    <label for="player_positions">Position</label>
-    <input id="player_positions" formControlName="player_positions" />
-    <small
-      *ngIf="
-        updateForm.get('player_positions')?.invalid &&
-        updateForm.get('player_positions')?.touched
-      "
-    >
-      Position is required.
-    </small>
+  <div class="buttons">
+    <button type="submit" [disabled]="updateForm.invalid">Update Player</button>
+    <button type="button" (click)="navigateToPlayerProfile()">Cancel</button>
   </div>
-
-  <div>
-    <label for="club_name">Club</label>
-    <input id="club_name" formControlName="club_name" />
-    <small
-      *ngIf="
-        updateForm.get('club_name')?.invalid &&
-        updateForm.get('club_name')?.touched
-      "
-    >
-      Club is required.
-    </small>
-  </div>
-
-  <div>
-    <label for="overall">Overall</label>
-    <input id="overall" type="number" formControlName="overall" />
-    <small
-      *ngIf="
-        updateForm.get('overall')?.invalid && updateForm.get('overall')?.touched
-      "
-    >
-      Overall must be between 0 and 100.
-    </small>
-  </div>
-
-  <div>
-    <label for="nationality_name">Nationality</label>
-    <input id="nationality_name" formControlName="nationality_name" />
-    <small
-      *ngIf="
-        updateForm.get('nationality_name')?.invalid &&
-        updateForm.get('nationality_name')?.touched
-      "
-    >
-      Nationality is required.
-    </small>
-  </div>
-
-  <div>
-    <label for="skill_moves">Skills</label>
-    <input id="skill_moves" formControlName="skill_moves" />
-    <small
-      *ngIf="
-        updateForm.get('skill_moves')?.invalid &&
-        updateForm.get('skill_moves')?.touched
-      "
-    >
-      Skills are required.
-    </small>
-  </div>
-
-  <button type="submit" [disabled]="updateForm.invalid">Update Player</button>
-  <button type="button" (click)="navigateToPlayerProfile()">Cancel</button>
 </form>

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPlayerSkillTimeline = exports.updatePlayer = exports.postPlayer = exports.deletePlayer = exports.getPlayer = exports.exportPlayersCSV = exports.getPlayers = void 0;
+exports.getPlayerSkillTimeline = exports.updatePlayer = exports.postPlayer = exports.getPlayer = exports.exportPlayersCSV = exports.getPlayers = void 0;
 const players_1 = require("../models/players");
 const sequelize_1 = require("sequelize");
 const json2csv_1 = require("json2csv"); //
@@ -113,14 +113,6 @@ const getPlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getPlayer = getPlayer;
-const deletePlayer = (req, res) => {
-    const { id } = req.params;
-    res.json({
-        msg: "delete Player",
-        id: id,
-    });
-};
-exports.deletePlayer = deletePlayer;
 const postPlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { long_name, player_positions, club_name, nationality_name, overall, skill_moves, player_face_url, pace, shooting, defending, passing, dribbling, physic, } = req.body;
     try {
@@ -154,7 +146,7 @@ const postPlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.postPlayer = postPlayer;
 const updatePlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params; // Extract player ID from URL parameters
-    const { long_name, player_positions, club_name, overall, nationality_name, skill_moves, } = req.body; // Extract fields from request body
+    const { long_name, player_positions, club_name, nationality_name, skill_moves, player_face_url, pace, shooting, defending, passing, dribbling, physic, } = req.body; // Extract fields from request body
     try {
         // Find the player by ID
         const player = yield players_1.players.findByPk(id);
@@ -164,14 +156,25 @@ const updatePlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 msg: `Player with ID ${id} not found`,
             });
         }
+        // Calculate overall skill based on provided skills
+        const skillValues = [pace, shooting, defending, passing, dribbling, physic];
+        const overall = Math.round(skillValues.reduce((sum, val) => sum + Number(val), 0) /
+            skillValues.length);
         // Update the player's data
         yield players_1.players.update({
             long_name,
             player_positions,
             club_name,
-            overall,
             nationality_name,
             skill_moves,
+            player_face_url,
+            pace,
+            shooting,
+            defending,
+            passing,
+            dribbling,
+            physic,
+            overall,
         }, {
             where: { id },
         });
@@ -213,9 +216,7 @@ const getPlayerSkillTimeline = (req, res) => __awaiter(void 0, void 0, void 0, f
     // Validate requested skills
     const invalidSkills = requestedSkills.filter((s) => !allowedSkills.includes(s));
     if (invalidSkills.length > 0) {
-        res
-            .status(400)
-            .json({
+        res.status(400).json({
             message: `Invalid skill(s) selected: ${invalidSkills.join(", ")}`,
         });
         return;

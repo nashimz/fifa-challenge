@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  deletePlayer,
   exportPlayersCSV,
   getPlayer,
   getPlayers,
@@ -14,7 +13,7 @@ const router = Router();
 router.get("/", getPlayers);
 router.get("/csv", exportPlayersCSV);
 router.get("/:id", getPlayer);
-router.delete("/:id", deletePlayer);
+
 router.post("/", postPlayer);
 router.put("/:id", updatePlayer);
 router.get("/:id/timeline", getPlayerSkillTimeline);

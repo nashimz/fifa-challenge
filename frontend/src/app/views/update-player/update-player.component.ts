@@ -15,6 +15,22 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class UpdatePlayerComponent implements OnInit {
   updateForm!: FormGroup;
   playerId!: number;
+  // Define the input fields for the form
+  inputFields = [
+    { name: 'long_name', label: 'Name', type: 'text' },
+    { name: 'player_positions', label: 'Position', type: 'text' },
+    { name: 'club_name', label: 'Club', type: 'text' },
+
+    { name: 'nationality_name', label: 'Nationality', type: 'text' },
+    { name: 'skill_moves', label: 'Skills', type: 'text' },
+    { name: 'player_face_url', label: 'Image URL', type: 'text' },
+    { name: 'pace', label: 'Pace', type: 'number' },
+    { name: 'shooting', label: 'Shooting', type: 'number' },
+    { name: 'defending', label: 'Defending', type: 'number' },
+    { name: 'passing', label: 'Passing', type: 'number' },
+    { name: 'dribbling', label: 'Dribbling', type: 'number' },
+    { name: 'physic', label: 'Physical', type: 'number' },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -34,12 +50,31 @@ export class UpdatePlayerComponent implements OnInit {
       long_name: ['', Validators.required],
       player_positions: ['', Validators.required],
       club_name: ['', Validators.required],
-      overall: [
+
+      nationality_name: ['', Validators.required],
+      skill_moves: ['', Validators.required],
+      player_face_url: ['', Validators.required],
+      pace: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      shooting: [
         0,
         [Validators.required, Validators.min(0), Validators.max(100)],
       ],
-      nationality_name: ['', Validators.required],
-      skill_moves: ['', Validators.required],
+      defending: [
+        0,
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
+      passing: [
+        0,
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
+      dribbling: [
+        0,
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
+      physic: [
+        0,
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
     });
   }
 
@@ -52,6 +87,13 @@ export class UpdatePlayerComponent implements OnInit {
         overall: data.overall,
         nationality_name: data.nationality_name,
         skill_moves: data.skill_moves,
+        player_face_url: data.player_face_url,
+        pace: data.pace,
+        shooting: data.shooting,
+        defending: data.defending,
+        passing: data.passing,
+        dribbling: data.dribbling,
+        physic: data.physic,
       });
     });
   }

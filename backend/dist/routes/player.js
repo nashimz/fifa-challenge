@@ -6,7 +6,6 @@ const router = (0, express_1.Router)();
 router.get("/", player_1.getPlayers);
 router.get("/csv", player_1.exportPlayersCSV);
 router.get("/:id", player_1.getPlayer);
-router.delete("/:id", player_1.deletePlayer);
 router.post("/", player_1.postPlayer);
 router.put("/:id", player_1.updatePlayer);
 router.get("/:id/timeline", player_1.getPlayerSkillTimeline);

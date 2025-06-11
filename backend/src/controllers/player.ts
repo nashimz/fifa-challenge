@@ -108,14 +108,6 @@ export const getPlayer = async (req: Request, res: Response) => {
   }
 };
 
-export const deletePlayer = (req: Request, res: Response) => {
-  const { id } = req.params;
-  res.json({
-    msg: "delete Player",
-    id: id,
-  });
-};
-
 export const postPlayer = async (
   req: Request,
   res: Response
@@ -174,9 +166,15 @@ export const updatePlayer = async (
     long_name,
     player_positions,
     club_name,
-    overall,
     nationality_name,
     skill_moves,
+    player_face_url,
+    pace,
+    shooting,
+    defending,
+    passing,
+    dribbling,
+    physic,
   } = req.body; // Extract fields from request body
 
   try {
@@ -189,6 +187,12 @@ export const updatePlayer = async (
         msg: `Player with ID ${id} not found`,
       });
     }
+    // Calculate overall skill based on provided skills
+    const skillValues = [pace, shooting, defending, passing, dribbling, physic];
+    const overall = Math.round(
+      skillValues.reduce((sum, val) => sum + Number(val), 0) /
+        skillValues.length
+    );
 
     // Update the player's data
     await players.update(
@@ -196,9 +200,16 @@ export const updatePlayer = async (
         long_name,
         player_positions,
         club_name,
-        overall,
         nationality_name,
         skill_moves,
+        player_face_url,
+        pace,
+        shooting,
+        defending,
+        passing,
+        dribbling,
+        physic,
+        overall,
       },
       {
         where: { id },
@@ -251,11 +262,9 @@ export const getPlayerSkillTimeline = async (
     (s) => !allowedSkills.includes(s)
   );
   if (invalidSkills.length > 0) {
-    res
-      .status(400)
-      .json({
-        message: `Invalid skill(s) selected: ${invalidSkills.join(", ")}`,
-      });
+    res.status(400).json({
+      message: `Invalid skill(s) selected: ${invalidSkills.join(", ")}`,
+    });
     return;
   }
 
