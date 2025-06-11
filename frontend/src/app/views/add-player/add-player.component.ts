@@ -81,8 +81,13 @@ export class AddPlayerComponent {
     if (this.addForm.valid) {
       this.playerService.addPlayer(this.addForm.value).subscribe(
         (response) => {
-          this.router.navigate(['/players']); // Redirect to players list after adding
-          // this.addForm.reset();
+          const newPlayerId = response?.player?.id;
+          if (newPlayerId) {
+            this.router.navigate(['/player', newPlayerId]);
+          } else {
+            console.warn('Player added but ID was not found in response.');
+            alert('Player added, but could not navigate to profile.');
+          }
         },
         (error: any) => {
           console.error('Error adding player', error);

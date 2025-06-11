@@ -114,14 +114,14 @@ const getPlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getPlayer = getPlayer;
 const postPlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { long_name, player_positions, club_name, nationality_name, overall, skill_moves, player_face_url, pace, shooting, defending, passing, dribbling, physic, } = req.body;
+    const { long_name, player_positions, club_name, nationality_name, skill_moves, player_face_url, pace, shooting, defending, passing, dribbling, physic, } = req.body;
     try {
         const newPlayer = yield players_1.players.create({
             long_name,
             player_positions,
             club_name,
             nationality_name,
-            overall,
+            overall: Math.round((pace + shooting + defending + passing + dribbling + physic) / 6),
             skill_moves,
             player_face_url,
             pace,

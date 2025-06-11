@@ -50,7 +50,6 @@ export class UpdatePlayerComponent implements OnInit {
       long_name: ['', Validators.required],
       player_positions: ['', Validators.required],
       club_name: ['', Validators.required],
-
       nationality_name: ['', Validators.required],
       skill_moves: ['', Validators.required],
       player_face_url: ['', Validators.required],

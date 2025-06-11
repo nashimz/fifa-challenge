@@ -117,7 +117,7 @@ export const postPlayer = async (
     player_positions,
     club_name,
     nationality_name,
-    overall,
+
     skill_moves,
     player_face_url,
     pace,
@@ -134,7 +134,9 @@ export const postPlayer = async (
       player_positions,
       club_name,
       nationality_name,
-      overall,
+      overall: Math.round(
+        (pace + shooting + defending + passing + dribbling + physic) / 6
+      ),
       skill_moves,
       player_face_url,
       pace,
