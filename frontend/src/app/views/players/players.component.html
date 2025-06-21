@@ -1,11 +1,32 @@
 <ng-container *ngIf="isAuthenticated$ | async as isAuth">
   <section *ngIf="isAuth" class="players">
     <div class="filters">
-      <input [(ngModel)]="filters.name" placeholder="Filter by name" />
-      <input [(ngModel)]="filters.club" placeholder="Filter by club" />
-      <input [(ngModel)]="filters.position" placeholder="Filter by position" />
-      <button (click)="applyFilters()">Apply Filters</button>
+      <input
+        [(ngModel)]="filters.name"
+        placeholder="Filter by name"
+        (ngModelChange)="applyFilters()"
+      />
+      <input
+        [(ngModel)]="filters.club"
+        placeholder="Filter by club"
+        (ngModelChange)="applyFilters()"
+      />
+      <input
+        [(ngModel)]="filters.position"
+        placeholder="Filter by position"
+        (ngModelChange)="applyFilters()"
+      />
+
       <button (click)="downloadCSV()">Download CSV</button>
+      <button (click)="triggerFileInput()">Upload CSV</button>
+      <input
+        type="file"
+        #fileInput
+        accept=".csv"
+        style="display: none"
+        (change)="uploadCSV($event)"
+      />
+
       <button [routerLink]="['/add-player']">
         Add Player <i class="material-icons">add</i>
       </button>

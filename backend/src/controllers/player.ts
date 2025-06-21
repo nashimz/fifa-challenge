@@ -2,15 +2,79 @@ import { Request, Response } from "express";
 import { players, playersCreationAttributes } from "../models/players";
 import { Op } from "sequelize";
 import { parse } from "json2csv"; //
+import multer from "multer";
+import csv from "csv-parser";
+import fs from "fs";
+import path from "path";
+
+const upload = multer({ dest: "uploads/" });
+
+export const uploadCSV = [
+  upload.single("file"),
+  async (req: Request, res: Response): Promise<void> => {
+    console.log("File received:", req.file);
+    if (!req.file) {
+      res.status(400).json({ message: "No file uploaded" });
+      return;
+    }
+
+    const results: any[] = [];
+
+    const filePath = req.file.path;
+
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on("data", (data) => results.push(data))
+      .on("error", (err) => {
+        console.error("Error reading CSV:", err);
+        fs.unlinkSync(filePath);
+        res.status(500).json({ message: "Error reading CSV file" });
+      })
+      .on("end", async () => {
+        try {
+          const chunkSize = 500;
+          for (let i = 0; i < results.length; i += chunkSize) {
+            const chunk = results.slice(i, i + chunkSize);
+            try {
+              await players.bulkCreate(chunk, {
+                ignoreDuplicates: true,
+                validate: true,
+              });
+            } catch (chunkErr) {
+              console.error(
+                `Error inserting chunk starting at row ${i}:`,
+                chunkErr
+              );
+              throw chunkErr;
+            }
+          }
+          fs.unlinkSync(filePath);
+          res.json({
+            message: "CSV data imported successfully",
+            count: results.length,
+          });
+        } catch (error) {
+          console.error("Error importing CSV:", error);
+          res.status(500).json({ message: "Error importing CSV data" });
+        }
+      });
+  },
+];
 
 export const getPlayers = async (req: Request, res: Response) => {
   try {
     // Parse filter parameters
+
     const name = (req.query.name as string) || "";
     const club = (req.query.club as string) || "";
     const position = (req.query.position as string) || "";
     const where: any = {};
-    if (name) where.long_name = { [Op.like]: `%${name}%` }; // Filter by name (partial match)
+    if (name) {
+      const nameTerms = name.trim().split(/\s+/);
+      where[Op.and] = nameTerms.map((term) => ({
+        long_name: { [Op.like]: `%${term}%` },
+      }));
+    }
     if (club) where.club_name = { [Op.like]: `%${club}%` }; // Filter by club (partial match)
     if (position) where.player_positions = { [Op.like]: `%${position}%` }; // Filter by position (partial match)
 
@@ -117,8 +181,8 @@ export const postPlayer = async (
     player_positions,
     club_name,
     nationality_name,
-
     skill_moves,
+
     player_face_url,
     pace,
     shooting,
@@ -129,14 +193,17 @@ export const postPlayer = async (
   } = req.body;
 
   try {
+    console.log("Query parameters:", req.body);
+    const skillValues = [pace, shooting, defending, passing, dribbling, physic];
+    const overall = Math.round(
+      skillValues.reduce((sum, val) => sum + Number(val), 0) /
+        skillValues.length
+    );
     const newPlayer = await players.create({
       long_name,
       player_positions,
       club_name,
       nationality_name,
-      overall: Math.round(
-        (pace + shooting + defending + passing + dribbling + physic) / 6
-      ),
       skill_moves,
       player_face_url,
       pace,
@@ -145,6 +212,7 @@ export const postPlayer = async (
       passing,
       dribbling,
       physic,
+      overall,
     } as playersCreationAttributes);
 
     res.status(201).json({

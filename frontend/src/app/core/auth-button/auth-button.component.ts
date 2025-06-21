@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { CommonModule, AsyncPipe, NgIf } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth-button',
@@ -12,6 +13,7 @@ import { CommonModule, AsyncPipe, NgIf } from '@angular/common';
 export class AuthButtonComponent {
   isBrowser = typeof window !== 'undefined';
   auth = this.isBrowser ? inject(AuthService) : null;
+  private router = inject(Router);
 
   login() {
     this.auth?.loginWithRedirect();
@@ -27,5 +29,8 @@ export class AuthButtonComponent {
 
   logout() {
     this.auth?.logout({ logoutParams: { returnTo: window.location.origin } });
+  }
+  goToDashboard(): void {
+    this.router.navigate(['/dashboard']);
   }
 }

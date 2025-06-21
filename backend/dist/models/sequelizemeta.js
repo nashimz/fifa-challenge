@@ -19,13 +19,13 @@ class sequelizemeta extends sequelize_1.Model {
                     name: "PRIMARY",
                     unique: true,
                     using: "BTREE",
-                    fields: [{ name: "name" }],
+                    fields: [{ name: "id" }],
                 },
                 {
-                    name: "name",
+                    name: "unique_player_per_version",
                     unique: true,
                     using: "BTREE",
-                    fields: [{ name: "name" }],
+                    fields: ["fifa_version", "long_name", "player_positions"],
                 },
             ],
         });

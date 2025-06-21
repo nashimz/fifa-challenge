@@ -6,6 +6,7 @@ import {
   getPlayerSkillTimeline,
   postPlayer,
   updatePlayer,
+  uploadCSV,
 } from "../controllers/player";
 
 const router = Router();
@@ -17,5 +18,7 @@ router.get("/:id", getPlayer);
 router.post("/", postPlayer);
 router.put("/:id", updatePlayer);
 router.get("/:id/timeline", getPlayerSkillTimeline);
+
+router.post("/upload-csv", uploadCSV);
 
 export default router;

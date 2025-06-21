@@ -1,10 +1,18 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  inject,
+  Input,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { PlayerCardComponent } from '../../core/player-card/player-card.component';
 import { FormsModule } from '@angular/forms';
 import { Players } from '../../core/model/players';
 import { PlayerService } from '../../core/services/player.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
@@ -28,17 +36,26 @@ export class PlayersComponent implements OnInit {
 
   isAuthenticated$ = this.auth?.isAuthenticated$;
 
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
   constructor(
     private _playersService: PlayerService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     if (this.auth) {
       this.auth.isAuthenticated$.subscribe((isAuth) => {
         if (isAuth) {
-          this.loadPlayers(this.currentPage, this.filters);
-          this.applyFilters();
+          this.route.queryParams.subscribe((params) => {
+            this.filters.name = params['name'] || '';
+            this.filters.club = params['club'] || '';
+            this.filters.position = params['position'] || '';
+            this.currentPage = parseInt(params['page'], 10) || 1;
+
+            this.loadPlayers(this.currentPage, this.filters);
+          });
         }
       });
     }
@@ -55,25 +72,27 @@ export class PlayersComponent implements OnInit {
   }
 
   applyFilters(): void {
-    this.currentPage = 1;
-    const filters = {
-      name: this.filters.name || '',
-      club: this.filters.club || '',
-      position: this.filters.position || '',
-    };
-
-    this._playersService
-      .getListaPlayers(this.currentPage, filters)
-      .subscribe((response) => {
-        this.Players = response.players;
-        this.totalPages = response.totalPages;
-        this.currentPage = response.currentPage;
-      });
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        name: this.filters.name,
+        club: this.filters.club,
+        position: this.filters.position,
+        page: 1, // Reset to first page
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
-      this.loadPlayers(page);
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {
+          page,
+        },
+        queryParamsHandling: 'merge',
+      });
     }
   }
 
@@ -91,5 +110,31 @@ export class PlayersComponent implements OnInit {
         console.error('Error downloading CSV:', err);
       },
     });
+  }
+
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click();
+  }
+
+  uploadCSV(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this._playersService.uploadPlayersCSV(formData).subscribe({
+      next: (res) => {
+        alert(`Successfully uploaded ${res.count} players`);
+        this.loadPlayers(this.currentPage); // Refresh list
+      },
+      error: (err) => {
+        console.error('Error uploading CSV:', err);
+        alert('Error uploading file.');
+      },
+    });
+
+    input.value = ''; // Reset input so the same file can be re-uploaded
   }
 }

@@ -21,10 +21,7 @@ export class HeaderComponent {
       text: 'Players',
       route: '/players',
     },
-    {
-      text: 'Contact',
-      route: '/contact',
-    },
+
     {
       text: 'Dashboard',
       route: '/dashboard',

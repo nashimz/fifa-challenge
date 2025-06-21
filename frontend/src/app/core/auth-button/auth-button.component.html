@@ -3,7 +3,9 @@
   *ngIf="auth?.isAuthenticated$ | async as loggedIn; else showAuthOptions"
 >
   <ng-container *ngIf="loggedIn">
-    <button *ngIf="auth?.user$ | async as user">Hello, {{ user.name }}</button>
+    <button *ngIf="auth?.user$ | async as user" (click)="goToDashboard()">
+      Hello, {{ user.name }}
+    </button>
     <button (click)="logout()">Logout</button>
   </ng-container>
 </ng-container>

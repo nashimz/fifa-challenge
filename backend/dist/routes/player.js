@@ -9,4 +9,5 @@ router.get("/:id", player_1.getPlayer);
 router.post("/", player_1.postPlayer);
 router.put("/:id", player_1.updatePlayer);
 router.get("/:id/timeline", player_1.getPlayerSkillTimeline);
+router.post("/upload-csv", player_1.uploadCSV);
 exports.default = router;

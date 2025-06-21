@@ -23,7 +23,6 @@ export class AddPlayerComponent {
     player_positions: 'Position',
     club_name: 'Club Name',
     nationality_name: 'Nationality',
-    overall: 'Overall',
     skill_moves: 'Skill Moves',
     player_face_url: 'Image URL',
     pace: 'Pace',
@@ -39,7 +38,6 @@ export class AddPlayerComponent {
     'player_positions',
     'club_name',
     'nationality_name',
-    'overall',
     'skill_moves',
     'player_face_url',
     'pace',
@@ -61,7 +59,6 @@ export class AddPlayerComponent {
       long_name: ['', [Validators.required, Validators.minLength(2)]],
       player_positions: ['', [Validators.required]],
       club_name: ['', [Validators.required]],
-      overall: ['', [Validators.required]],
       nationality_name: ['', [Validators.required]],
       skill_moves: ['', [Validators.required]],
       player_face_url: [

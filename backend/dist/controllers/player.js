@@ -8,11 +8,65 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPlayerSkillTimeline = exports.updatePlayer = exports.postPlayer = exports.getPlayer = exports.exportPlayersCSV = exports.getPlayers = void 0;
+exports.getPlayerSkillTimeline = exports.updatePlayer = exports.postPlayer = exports.getPlayer = exports.exportPlayersCSV = exports.getPlayers = exports.uploadCSV = void 0;
 const players_1 = require("../models/players");
 const sequelize_1 = require("sequelize");
 const json2csv_1 = require("json2csv"); //
+const multer_1 = __importDefault(require("multer"));
+const csv_parser_1 = __importDefault(require("csv-parser"));
+const fs_1 = __importDefault(require("fs"));
+const upload = (0, multer_1.default)({ dest: "uploads/" });
+exports.uploadCSV = [
+    upload.single("file"),
+    (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log("File received:", req.file);
+        if (!req.file) {
+            res.status(400).json({ message: "No file uploaded" });
+            return;
+        }
+        const results = [];
+        const filePath = req.file.path;
+        fs_1.default.createReadStream(filePath)
+            .pipe((0, csv_parser_1.default)())
+            .on("data", (data) => results.push(data))
+            .on("error", (err) => {
+            console.error("Error reading CSV:", err);
+            fs_1.default.unlinkSync(filePath);
+            res.status(500).json({ message: "Error reading CSV file" });
+        })
+            .on("end", () => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                const chunkSize = 500;
+                for (let i = 0; i < results.length; i += chunkSize) {
+                    const chunk = results.slice(i, i + chunkSize);
+                    try {
+                        yield players_1.players.bulkCreate(chunk, {
+                            ignoreDuplicates: true,
+                            validate: true,
+                        });
+                    }
+                    catch (chunkErr) {
+                        console.error(`Error inserting chunk starting at row ${i}:`, chunkErr);
+                        throw chunkErr;
+                    }
+                }
+                fs_1.default.unlinkSync(filePath);
+                res.json({
+                    message: "CSV data imported successfully",
+                    count: results.length,
+                });
+            }
+            catch (error) {
+                console.error("Error importing CSV:", error);
+                res.status(500).json({ message: "Error importing CSV data" });
+            }
+        }));
+    }),
+];
 const getPlayers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Parse filter parameters
@@ -20,8 +74,12 @@ const getPlayers = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const club = req.query.club || "";
         const position = req.query.position || "";
         const where = {};
-        if (name)
-            where.long_name = { [sequelize_1.Op.like]: `%${name}%` }; // Filter by name (partial match)
+        if (name) {
+            const nameTerms = name.trim().split(/\s+/);
+            where[sequelize_1.Op.and] = nameTerms.map((term) => ({
+                long_name: { [sequelize_1.Op.like]: `%${term}%` },
+            }));
+        }
         if (club)
             where.club_name = { [sequelize_1.Op.like]: `%${club}%` }; // Filter by club (partial match)
         if (position)
@@ -116,12 +174,15 @@ exports.getPlayer = getPlayer;
 const postPlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { long_name, player_positions, club_name, nationality_name, skill_moves, player_face_url, pace, shooting, defending, passing, dribbling, physic, } = req.body;
     try {
+        console.log("Query parameters:", req.body);
+        const skillValues = [pace, shooting, defending, passing, dribbling, physic];
+        const overall = Math.round(skillValues.reduce((sum, val) => sum + Number(val), 0) /
+            skillValues.length);
         const newPlayer = yield players_1.players.create({
             long_name,
             player_positions,
             club_name,
             nationality_name,
-            overall: Math.round((pace + shooting + defending + passing + dribbling + physic) / 6),
             skill_moves,
             player_face_url,
             pace,
@@ -130,6 +191,7 @@ const postPlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             passing,
             dribbling,
             physic,
+            overall,
         });
         res.status(201).json({
             msg: "Player added successfully",
