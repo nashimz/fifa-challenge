@@ -1,0 +1,143 @@
+{
+	"info": {
+		"_postman_id": "68cc6090-99e0-4795-9582-76e8105fb658",
+		"name": "FifaAngular",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39582119",
+		"_collection_link": "https://winter-spaceship-218534.postman.co/workspace/12c3ae30-1f3e-4506-8202-0871d7aea01a/collection/39582119-68cc6090-99e0-4795-9582-76e8105fb658?action=share&source=collection_link&creator=39582119"
+	},
+	"item": [
+		{
+			"name": "Traer jugador con id=2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ill6WVNMbDhtaTNxd1NBUmE3ZHY2cSJ9.eyJpc3MiOiJodHRwczovL2Rldi1vdXo3ZXJja3lqeXN3eW14LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiI3WXU5Z256YzBYZWdJWHJzNVRyUUpnbUpTOEFSSWsxQkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAxL2FwaS8iLCJpYXQiOjE3NTEyOTU4MDIsImV4cCI6MTc1MTM4MjIwMiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiN1l1OWduemMwWGVnSVhyczVUclFKZ21KUzhBUklrMUIifQ.nKgGFkHhMbslrAaz542BRZ-xoE9cXHy0xY-Neb6wZriSTFwnySw3qftowVUNskOUgnH1SSssTMu8t5pZ-mYRgN457sfyBOKyoaHQ4-djyLF2iVN8SfWzhGV9MHLNIlz2xKmCK6KCcSmTgm6rkeeLLlbGD-LyUsOEs5VBHWCmBreN7kMdQe-QUoQ2h3I_w8GPzYXWXEl4uqNLvoFj46lPEKfMfDWSBfYUxU7xEEXCosYaL1DYWYfBf3lTp8PosykUGOG4PbT-HojEIXig6lIa7lNxWtzdGBhqajJpORV1A9SBMMoqVC9y8x1bTtjfjf9rJJXvoccerzW7_6mFA7NUfw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/players/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"players",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Traer jugadores",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Agregar un jugador",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ill6WVNMbDhtaTNxd1NBUmE3ZHY2cSJ9.eyJpc3MiOiJodHRwczovL2Rldi1vdXo3ZXJja3lqeXN3eW14LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiI3WXU5Z256YzBYZWdJWHJzNVRyUUpnbUpTOEFSSWsxQkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAxL2FwaS8iLCJpYXQiOjE3NTEyOTU4MDIsImV4cCI6MTc1MTM4MjIwMiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiN1l1OWduemMwWGVnSVhyczVUclFKZ21KUzhBUklrMUIifQ.nKgGFkHhMbslrAaz542BRZ-xoE9cXHy0xY-Neb6wZriSTFwnySw3qftowVUNskOUgnH1SSssTMu8t5pZ-mYRgN457sfyBOKyoaHQ4-djyLF2iVN8SfWzhGV9MHLNIlz2xKmCK6KCcSmTgm6rkeeLLlbGD-LyUsOEs5VBHWCmBreN7kMdQe-QUoQ2h3I_w8GPzYXWXEl4uqNLvoFj46lPEKfMfDWSBfYUxU7xEEXCosYaL1DYWYfBf3lTp8PosykUGOG4PbT-HojEIXig6lIa7lNxWtzdGBhqajJpORV1A9SBMMoqVC9y8x1bTtjfjf9rJJXvoccerzW7_6mFA7NUfw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"long_name\": \"Lionel Messi\",\r\n  \"player_positions\": \"RW\",\r\n  \"club_name\": \"Inter Miami\",\r\n  \"nationality_name\": \"Argentina\",\r\n  \"player_face_url\": \"https://example.com/messi.jpg\",\r\n  \"pace\": 85,\r\n  \"shooting\": 92,\r\n  \"defending\": 35,\r\n  \"passing\": 91,\r\n  \"dribbling\": 95,\r\n  \"physic\": 68\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/players",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"players"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actualizar un jugador",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ill6WVNMbDhtaTNxd1NBUmE3ZHY2cSJ9.eyJpc3MiOiJodHRwczovL2Rldi1vdXo3ZXJja3lqeXN3eW14LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiI3WXU5Z256YzBYZWdJWHJzNVRyUUpnbUpTOEFSSWsxQkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAxL2FwaS8iLCJpYXQiOjE3NTEyOTU4MDIsImV4cCI6MTc1MTM4MjIwMiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiN1l1OWduemMwWGVnSVhyczVUclFKZ21KUzhBUklrMUIifQ.nKgGFkHhMbslrAaz542BRZ-xoE9cXHy0xY-Neb6wZriSTFwnySw3qftowVUNskOUgnH1SSssTMu8t5pZ-mYRgN457sfyBOKyoaHQ4-djyLF2iVN8SfWzhGV9MHLNIlz2xKmCK6KCcSmTgm6rkeeLLlbGD-LyUsOEs5VBHWCmBreN7kMdQe-QUoQ2h3I_w8GPzYXWXEl4uqNLvoFj46lPEKfMfDWSBfYUxU7xEEXCosYaL1DYWYfBf3lTp8PosykUGOG4PbT-HojEIXig6lIa7lNxWtzdGBhqajJpORV1A9SBMMoqVC9y8x1bTtjfjf9rJJXvoccerzW7_6mFA7NUfw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"long_name\": \"Lionel Messi\",\r\n  \"player_positions\": \"CF\",\r\n  \"club_name\": \"Inter Miami\",\r\n  \"nationality_name\": \"Argentina\",\r\n  \"player_face_url\": \"https://example.com/messi-updated.jpg\",\r\n  \"pace\": 84,\r\n  \"shooting\": 91,\r\n  \"defending\": 36,\r\n  \"passing\": 90,\r\n  \"dribbling\": 94,\r\n  \"physic\": 99\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/players/342955",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"players",
+						"342955"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

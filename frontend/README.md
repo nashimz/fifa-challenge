@@ -11,3 +11,5 @@
 - Se utilizo Auth0 para manejar la autenticacion y la autorizacion del usuario y para proteger los endpoints del backend con Bearer Token JWT
 - Se utilizo https://www.chartjs.org/docs/latest/charts/radar.html para realizar el radar de las habilidades de los jugadores
 - Se utilizo https://www.chartjs.org/docs/latest/charts/line.html para realizar la linea del tiempo de una habilidad en particular
+- Se decidio calcular el overall del jugador cuando el usuario inventa o actualiza un jugador para que se realize con los parametros que elige solamente
+- Se realizo un filtrado que se renderiza en tiempo real y parcialmente mientras se tipea
