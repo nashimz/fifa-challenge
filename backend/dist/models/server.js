@@ -16,7 +16,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const connection_1 = __importDefault(require("../db/connection"));
 const player_1 = __importDefault(require("../routes/player"));
-const authmiddleware_1 = require("../guards/authmiddleware");
+const authmiddleware_1 = require("../middlewares/authmiddleware");
 class Server {
     constructor() {
         this.app = (0, express_1.default)();

@@ -11,7 +11,7 @@ import {
 import { PlayerCardComponent } from '../../core/player-card/player-card.component';
 import { FormsModule } from '@angular/forms';
 import { Players } from '../../core/model/players';
-import { PlayerService } from '../../core/services/player.service';
+import { PlayerService } from '../../../../src/app/services/player.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 

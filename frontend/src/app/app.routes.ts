@@ -4,7 +4,7 @@ import { PlayersComponent } from './views/players/players.component';
 import { PlayerProfileComponent } from './views/player-profile/player-profile.component';
 import { UpdatePlayerComponent } from './views/update-player/update-player.component';
 import { AddPlayerComponent } from './views/add-player/add-player.component';
-import { BrowserAuthGuard } from './core/guards/browser-auth.guard';
+import { BrowserAuthGuard } from './middlewares/guards/browser-auth.guard';
 import { NotAuthorizedComponent } from './views/not-authorized/not-authorized.component';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 
@@ -16,7 +16,7 @@ export const routes: Routes = [
   {
     path: 'players',
     component: PlayersComponent,
-    canActivate: [BrowserAuthGuard], // protect players route
+    canActivate: [BrowserAuthGuard],
   },
   {
     path: '',
@@ -31,12 +31,12 @@ export const routes: Routes = [
   {
     path: 'player/update/:id',
     component: UpdatePlayerComponent,
-    canActivate: [BrowserAuthGuard], // protect update player route
+    canActivate: [BrowserAuthGuard],
   },
   {
     path: 'add-player',
     component: AddPlayerComponent,
-    canActivate: [BrowserAuthGuard], // protect add player route
+    canActivate: [BrowserAuthGuard],
   },
   {
     path: 'dashboard',

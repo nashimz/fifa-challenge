@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { PlayerService } from '../../../app/core/services/player.service';
+import { PlayerService } from '../../../../src/app/services/player.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -23,7 +23,6 @@ export class AddPlayerComponent {
     player_positions: 'Position',
     club_name: 'Club Name',
     nationality_name: 'Nationality',
-    skill_moves: 'Skill Moves',
     player_face_url: 'Image URL',
     pace: 'Pace',
     shooting: 'Shooting',
@@ -38,7 +37,6 @@ export class AddPlayerComponent {
     'player_positions',
     'club_name',
     'nationality_name',
-    'skill_moves',
     'player_face_url',
     'pace',
     'shooting',
@@ -60,7 +58,6 @@ export class AddPlayerComponent {
       player_positions: ['', [Validators.required]],
       club_name: ['', [Validators.required]],
       nationality_name: ['', [Validators.required]],
-      skill_moves: ['', [Validators.required]],
       player_face_url: [
         '',
         [Validators.required, Validators.pattern('https?://.+')],

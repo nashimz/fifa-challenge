@@ -5,7 +5,6 @@ import { parse } from "json2csv"; //
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
-import path from "path";
 
 const upload = multer({ dest: "uploads/" });
 
@@ -63,8 +62,6 @@ export const uploadCSV = [
 
 export const getPlayers = async (req: Request, res: Response) => {
   try {
-    // Parse filter parameters
-
     const name = (req.query.name as string) || "";
     const club = (req.query.club as string) || "";
     const position = (req.query.position as string) || "";
@@ -75,8 +72,8 @@ export const getPlayers = async (req: Request, res: Response) => {
         long_name: { [Op.like]: `%${term}%` },
       }));
     }
-    if (club) where.club_name = { [Op.like]: `%${club}%` }; // Filter by club (partial match)
-    if (position) where.player_positions = { [Op.like]: `%${position}%` }; // Filter by position (partial match)
+    if (club) where.club_name = { [Op.like]: `%${club}%` };
+    if (position) where.player_positions = { [Op.like]: `%${position}%` };
 
     console.log("Filters applied:", where); // Debug: check the filters
 
@@ -107,16 +104,11 @@ export const getPlayers = async (req: Request, res: Response) => {
   }
 };
 
-/* res.json({
-    msg: "get Player",
-  }); */
-
 export const exportPlayersCSV = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    // Parse filter parameters
     const name = (req.query.name as string) || "";
     const club = (req.query.club as string) || "";
     const position = (req.query.position as string) || "";
@@ -125,8 +117,6 @@ export const exportPlayersCSV = async (
     if (club) where.club_name = { [Op.like]: `%${club}%` };
     if (position) where.player_positions = { [Op.like]: `%${position}%` };
 
-    console.log("Filters applied for CSV export:", where); // Debug
-
     // Fetch all matching players without pagination
     const allPlayers = await players.findAll({ where });
 
@@ -134,12 +124,7 @@ export const exportPlayersCSV = async (
     const playersData = allPlayers.map((player) => player.toJSON());
 
     // Define fields for CSV
-    const fields = [
-      "id",
-      "long_name",
-      "club_name",
-      "players_positions" /* add other fields as needed */,
-    ];
+    const fields = ["id", "long_name", "club_name", "players_positions"];
     const opts = { fields };
 
     // Convert JSON to CSV
@@ -181,8 +166,6 @@ export const postPlayer = async (
     player_positions,
     club_name,
     nationality_name,
-    skill_moves,
-
     player_face_url,
     pace,
     shooting,
@@ -193,7 +176,6 @@ export const postPlayer = async (
   } = req.body;
 
   try {
-    console.log("Query parameters:", req.body);
     const skillValues = [pace, shooting, defending, passing, dribbling, physic];
     const overall = Math.round(
       skillValues.reduce((sum, val) => sum + Number(val), 0) /
@@ -204,7 +186,7 @@ export const postPlayer = async (
       player_positions,
       club_name,
       nationality_name,
-      skill_moves,
+
       player_face_url,
       pace,
       shooting,
@@ -231,13 +213,13 @@ export const updatePlayer = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { id } = req.params; // Extract player ID from URL parameters
+  const { id } = req.params;
   const {
     long_name,
     player_positions,
     club_name,
     nationality_name,
-    skill_moves,
+
     player_face_url,
     pace,
     shooting,
@@ -245,33 +227,30 @@ export const updatePlayer = async (
     passing,
     dribbling,
     physic,
-  } = req.body; // Extract fields from request body
+  } = req.body;
 
   try {
     // Find the player by ID
     const player = await players.findByPk(id);
 
     if (!player) {
-      // If player not found, send a 404 error
       res.status(404).json({
         msg: `Player with ID ${id} not found`,
       });
     }
-    // Calculate overall skill based on provided skills
+
     const skillValues = [pace, shooting, defending, passing, dribbling, physic];
     const overall = Math.round(
       skillValues.reduce((sum, val) => sum + Number(val), 0) /
         skillValues.length
     );
 
-    // Update the player's data
     await players.update(
       {
         long_name,
         player_positions,
         club_name,
         nationality_name,
-        skill_moves,
         player_face_url,
         pace,
         shooting,
@@ -286,7 +265,6 @@ export const updatePlayer = async (
       }
     );
 
-    // Respond with the updated player data
     res.json({
       msg: "Player updated successfully",
       player,

@@ -64,7 +64,7 @@ export class RadarChartComponent implements OnChanges {
               display: true,
               position: 'top',
               labels: {
-                color: 'white', // Set "Player Attributes" label to white
+                color: 'white',
                 font: {
                   size: 14,
                   weight: 'bold',
@@ -82,7 +82,7 @@ export class RadarChartComponent implements OnChanges {
                 color: 'white',
               },
               ticks: {
-                color: 'white', // Change number color to white (or any other color)
+                color: 'white',
                 font: {
                   size: 12,
                   weight: 'bold',

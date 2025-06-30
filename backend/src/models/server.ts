@@ -2,7 +2,7 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import db from "../db/connection";
 import routesPlayer from "../routes/player";
-import { checkJwt } from "../guards/authmiddleware";
+import { checkJwt } from "../middlewares/authmiddleware";
 
 class Server {
   private app: Application;

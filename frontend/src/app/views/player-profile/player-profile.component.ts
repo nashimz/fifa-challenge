@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
-import { PlayerService } from '../../core/services/player.service';
+import { PlayerService } from '../../../../src/app/services/player.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule, NgIf } from '@angular/common';
 import { RadarChartComponent } from '../../core/radar-chart/radar-chart.component';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { NgChartsConfiguration } from 'ng2-charts';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
+
 import { SkillTimelineChartComponent } from '../../core/skill-timeline-chart/skill-timeline-chart.component';
 
 @Component({

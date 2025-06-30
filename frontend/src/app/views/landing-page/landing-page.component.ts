@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PresentationComponent } from '../presentation/presentation.component';
+import { PresentationComponent } from '../../core/presentation/presentation.component';
 import { CommonModule } from '@angular/common';
 
 @Component({

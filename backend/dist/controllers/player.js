@@ -69,7 +69,6 @@ exports.uploadCSV = [
 ];
 const getPlayers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Parse filter parameters
         const name = req.query.name || "";
         const club = req.query.club || "";
         const position = req.query.position || "";
@@ -81,9 +80,9 @@ const getPlayers = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             }));
         }
         if (club)
-            where.club_name = { [sequelize_1.Op.like]: `%${club}%` }; // Filter by club (partial match)
+            where.club_name = { [sequelize_1.Op.like]: `%${club}%` };
         if (position)
-            where.player_positions = { [sequelize_1.Op.like]: `%${position}%` }; // Filter by position (partial match)
+            where.player_positions = { [sequelize_1.Op.like]: `%${position}%` };
         console.log("Filters applied:", where); // Debug: check the filters
         // Else, apply pagination for regular API response
         const limit = 25; // Default limit to 25
@@ -112,12 +111,8 @@ const getPlayers = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.getPlayers = getPlayers;
-/* res.json({
-    msg: "get Player",
-  }); */
 const exportPlayersCSV = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Parse filter parameters
         const name = req.query.name || "";
         const club = req.query.club || "";
         const position = req.query.position || "";
@@ -128,18 +123,12 @@ const exportPlayersCSV = (req, res) => __awaiter(void 0, void 0, void 0, functio
             where.club_name = { [sequelize_1.Op.like]: `%${club}%` };
         if (position)
             where.player_positions = { [sequelize_1.Op.like]: `%${position}%` };
-        console.log("Filters applied for CSV export:", where); // Debug
         // Fetch all matching players without pagination
         const allPlayers = yield players_1.players.findAll({ where });
         // Convert to JSON
         const playersData = allPlayers.map((player) => player.toJSON());
         // Define fields for CSV
-        const fields = [
-            "id",
-            "long_name",
-            "club_name",
-            "players_positions" /* add other fields as needed */,
-        ];
+        const fields = ["id", "long_name", "club_name", "players_positions"];
         const opts = { fields };
         // Convert JSON to CSV
         const csv = (0, json2csv_1.parse)(playersData, opts);
@@ -172,9 +161,8 @@ const getPlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getPlayer = getPlayer;
 const postPlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { long_name, player_positions, club_name, nationality_name, skill_moves, player_face_url, pace, shooting, defending, passing, dribbling, physic, } = req.body;
+    const { long_name, player_positions, club_name, nationality_name, player_face_url, pace, shooting, defending, passing, dribbling, physic, } = req.body;
     try {
-        console.log("Query parameters:", req.body);
         const skillValues = [pace, shooting, defending, passing, dribbling, physic];
         const overall = Math.round(skillValues.reduce((sum, val) => sum + Number(val), 0) /
             skillValues.length);
@@ -183,7 +171,6 @@ const postPlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             player_positions,
             club_name,
             nationality_name,
-            skill_moves,
             player_face_url,
             pace,
             shooting,
@@ -207,28 +194,24 @@ const postPlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.postPlayer = postPlayer;
 const updatePlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params; // Extract player ID from URL parameters
-    const { long_name, player_positions, club_name, nationality_name, skill_moves, player_face_url, pace, shooting, defending, passing, dribbling, physic, } = req.body; // Extract fields from request body
+    const { id } = req.params;
+    const { long_name, player_positions, club_name, nationality_name, player_face_url, pace, shooting, defending, passing, dribbling, physic, } = req.body;
     try {
         // Find the player by ID
         const player = yield players_1.players.findByPk(id);
         if (!player) {
-            // If player not found, send a 404 error
             res.status(404).json({
                 msg: `Player with ID ${id} not found`,
             });
         }
-        // Calculate overall skill based on provided skills
         const skillValues = [pace, shooting, defending, passing, dribbling, physic];
         const overall = Math.round(skillValues.reduce((sum, val) => sum + Number(val), 0) /
             skillValues.length);
-        // Update the player's data
         yield players_1.players.update({
             long_name,
             player_positions,
             club_name,
             nationality_name,
-            skill_moves,
             player_face_url,
             pace,
             shooting,
@@ -240,7 +223,6 @@ const updatePlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         }, {
             where: { id },
         });
-        // Respond with the updated player data
         res.json({
             msg: "Player updated successfully",
             player,

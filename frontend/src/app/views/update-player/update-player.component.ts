@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlayerService } from '../../core/services/player.service';
+import { PlayerService } from '../../../../src/app/services/player.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -22,7 +22,7 @@ export class UpdatePlayerComponent implements OnInit {
     { name: 'club_name', label: 'Club', type: 'text' },
 
     { name: 'nationality_name', label: 'Nationality', type: 'text' },
-    { name: 'skill_moves', label: 'Skills', type: 'text' },
+
     { name: 'player_face_url', label: 'Image URL', type: 'text' },
     { name: 'pace', label: 'Pace', type: 'number' },
     { name: 'shooting', label: 'Shooting', type: 'number' },
@@ -51,7 +51,7 @@ export class UpdatePlayerComponent implements OnInit {
       player_positions: ['', Validators.required],
       club_name: ['', Validators.required],
       nationality_name: ['', Validators.required],
-      skill_moves: ['', Validators.required],
+
       player_face_url: ['', Validators.required],
       pace: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
       shooting: [
@@ -85,7 +85,6 @@ export class UpdatePlayerComponent implements OnInit {
         club_name: data.club_name,
         overall: data.overall,
         nationality_name: data.nationality_name,
-        skill_moves: data.skill_moves,
         player_face_url: data.player_face_url,
         pace: data.pace,
         shooting: data.shooting,

@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { enviroment } from '../../../enviroments/enviroment';
+import { enviroment } from '../../../src/enviroments/enviroment';
 import { Observable } from 'rxjs';
-import { SkillTimelineEntry } from '../model/skill-timeline';
+import { SkillTimelineEntry } from '../../app/core/model/skill-timeline';
 
 @Injectable({
   providedIn: 'root',
