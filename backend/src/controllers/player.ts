@@ -113,29 +113,28 @@ export const exportPlayersCSV = async (
     const club = (req.query.club as string) || "";
     const position = (req.query.position as string) || "";
     const where: any = {};
-    if (name) where.long_name = { [Op.like]: `%${name}%` };
+
+    if (name) {
+      const nameTerms = name.trim().split(/\s+/);
+      where[Op.and] = nameTerms.map((term) => ({
+        long_name: { [Op.like]: `%${term}%` },
+      }));
+    }
     if (club) where.club_name = { [Op.like]: `%${club}%` };
     if (position) where.player_positions = { [Op.like]: `%${position}%` };
 
-    // Fetch all matching players without pagination
     const allPlayers = await players.findAll({ where });
-
-    // Convert to JSON
     const playersData = allPlayers.map((player) => player.toJSON());
 
-    // Define fields for CSV
     const fields = ["id", "long_name", "club_name", "players_positions"];
     const opts = { fields };
 
-    // Convert JSON to CSV
     const csv = parse(playersData, opts);
 
-    // Set response headers for file download
     const utf8BOM = "\uFEFF";
     res.header("Content-Type", "text/csv; charset=utf-8");
     res.attachment("players.csv");
     res.send(utf8BOM + csv);
-    return;
   } catch (error) {
     console.error("Error exporting players to CSV:", error);
     res

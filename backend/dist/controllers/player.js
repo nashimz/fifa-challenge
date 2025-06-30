@@ -117,27 +117,25 @@ const exportPlayersCSV = (req, res) => __awaiter(void 0, void 0, void 0, functio
         const club = req.query.club || "";
         const position = req.query.position || "";
         const where = {};
-        if (name)
-            where.long_name = { [sequelize_1.Op.like]: `%${name}%` };
+        if (name) {
+            const nameTerms = name.trim().split(/\s+/);
+            where[sequelize_1.Op.and] = nameTerms.map((term) => ({
+                long_name: { [sequelize_1.Op.like]: `%${term}%` },
+            }));
+        }
         if (club)
             where.club_name = { [sequelize_1.Op.like]: `%${club}%` };
         if (position)
             where.player_positions = { [sequelize_1.Op.like]: `%${position}%` };
-        // Fetch all matching players without pagination
         const allPlayers = yield players_1.players.findAll({ where });
-        // Convert to JSON
         const playersData = allPlayers.map((player) => player.toJSON());
-        // Define fields for CSV
         const fields = ["id", "long_name", "club_name", "players_positions"];
         const opts = { fields };
-        // Convert JSON to CSV
         const csv = (0, json2csv_1.parse)(playersData, opts);
-        // Set response headers for file download
         const utf8BOM = "\uFEFF";
         res.header("Content-Type", "text/csv; charset=utf-8");
         res.attachment("players.csv");
         res.send(utf8BOM + csv);
-        return;
     }
     catch (error) {
         console.error("Error exporting players to CSV:", error);

@@ -11,5 +11,5 @@ router.get("/:id", player_validators_1.validateGetPlayerById, handleValidationEr
 router.post("/", player_validators_1.validatePostPlayer, handleValidationErrors_1.handleValidationErrors, player_1.postPlayer);
 router.put("/:id", player_validators_1.validateUpdatePlayer, handleValidationErrors_1.handleValidationErrors, player_1.updatePlayer);
 router.get("/:id/timeline", player_validators_1.validateGetPlayerSkillTimeline, handleValidationErrors_1.handleValidationErrors, player_1.getPlayerSkillTimeline);
-router.post("/upload-csv", player_validators_1.validateUploadCSV, handleValidationErrors_1.handleValidationErrors, player_1.uploadCSV);
+router.post("/upload-csv", player_1.uploadCSV);
 exports.default = router;

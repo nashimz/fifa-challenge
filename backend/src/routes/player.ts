@@ -43,8 +43,7 @@ router.get(
 
 router.post(
   "/upload-csv",
-  validateUploadCSV,
-  handleValidationErrors,
+
   uploadCSV
 );
 
