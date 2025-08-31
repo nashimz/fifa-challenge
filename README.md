@@ -1,7 +1,7 @@
 /// CORRER LA APP
 
 - Tener instalado NodeJS, Angular y MYSQL
-- Tener 3 consolas, en una ingresar a la ruta proyecto/backend/dist y ejecutar nodemon index.js o npx nodemon index.js, en la otra ingresar a proyecto/frontend y ejecutar ng serve y en la ultima entrar a la ruta proyecto/backend/src y ejecutar tsc --watch por si esta la necesidad de transpilar algo.
+- Tener 3 consolas, en una ingresar a la ruta proyecto/backend/dist y ejecutar npx nodemon index.js, en la otra ingresar a proyecto/frontend y ejecutar ng serve y en la ultima entrar a la ruta proyecto/backend/src y ejecutar tsc --watch por si esta la necesidad de transpilar algo.
 - Chequear el archivo connection.ts para la correcta configuracion a la BD propia.
 
 /// DECISIONES TECNICAS
